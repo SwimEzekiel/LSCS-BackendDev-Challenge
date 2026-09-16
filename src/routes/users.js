@@ -14,8 +14,12 @@ router.post('/', (req,res)=>{
 })
 
 router.route("/:id").get((req,res)=>{
+    const userId = req.params.id;
+    const page = req.query.page;
+
+    res.json({userId, page})
     console.log(req.user)
-    res.send(`get user with id ${req.params.id}`)
+    //res.send(`get user with id ${req.params.id}`)
 }).put((req,res)=>{
     res.send(`update user with id ${req.params.id}`)
 }).delete((req,res)=>{
