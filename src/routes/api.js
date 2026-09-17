@@ -1,18 +1,24 @@
 const express = require("express")
+const validate = require("./validation.js")
 const router = express.Router()
 
 
-router.post('/products', (req,res)=>{
-    const product = req.body;
+router.post('/products', validate, (req,res)=> {
+    try{
+        const product = req.body;
 
-    res.status(201).json({
-        message: "New Product Created!",
-        product: "Pin"
-    })
+        console.log(`product id ${product.id}, ${product.productName}`)
+        res.status(201).json({product})
+    } catch{
+        res.status(500).json({error: error.message})
+        
+    }
 })
 
 router.get('/products', (req,res)=>{
-    res.send("wow!!")
+    res.status(404).send(
+        "error: product not found"
+    )
 })
 
 router.route('/products/:id').get((req, res)=>{
