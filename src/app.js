@@ -1,3 +1,12 @@
+/*
+Project Name: LSCS Backend Development Challenge 
+Programmer Name: Ezekiel S. Alvarez
+Tech Stacks Used:
+    - Node.js
+    - Express
+    - SQLite
+*/
+
 const express = require("express");
 const app = express();
 const sqlite3 = require("sqlite3").verbose();
@@ -51,7 +60,6 @@ app.get('/', (req,res)=>{
 //More organized routing
 const apiRouter = require("./routes/api")
 app.use("/api", apiRouter)
-
 
 
 app.listen(port, ()=>{

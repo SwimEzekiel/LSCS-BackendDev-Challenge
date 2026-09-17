@@ -1,5 +1,9 @@
 const express = require("express")
 const validate = require("./validation.js")
+
+//const sqlite3 = require("./src/sqlite3").verbose();
+//let sql;
+
 const router = express.Router()
 
 //---- TEMPORARY DATABASE -----
