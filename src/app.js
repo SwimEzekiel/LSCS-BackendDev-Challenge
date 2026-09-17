@@ -10,7 +10,8 @@ const db = new sqlite3.Database("./schema.db", sqlite3.OPEN_READWRITE, (err)=>{
 })
 
 //create table
-//sql = CREATE TABLE products(id )
+sql = `CREATE TABLE products(id INTEGER PRIMARY KEY, productName, price, stock, category, description)`;
+db.run(sql)
 
 app.use(express.json());
 app.get('/', (req,res)=>{
