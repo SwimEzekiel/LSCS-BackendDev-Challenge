@@ -18,16 +18,15 @@ const productsArr = [{
     "category": "Accessories",
     "description": "A cute pin with cute Macky art!"
 }]
-
+//alfonso:ang cute ni zek zeke:thxxxx
 router.post('/products', validate, (req,res)=> {
     try{
         const product = req.body;
-        //productsArr.push(product)
+        productsArr.push(product)
         console.log(`product id ${product.id}, ${product.productName}`)
         res.status(201).json(product)
     } catch (error) {
         res.status(500).json({error: `${error}`})
-        
     }
 })
 
@@ -43,14 +42,38 @@ router.get('/products', (req,res)=>{
 
 router.route('/products/:id').get((req, res)=>{
     const userId = req.params.id
-    const body = req.params.body
+    try{
+        if (userId < productsArr.length){
+            res.status(200).json(productsArr[userId])
+        } else {
+            res.status(404).send("Product not found!")
+        }
+    } catch {
+        res.status(500).json({error: error.message})
+    }
+}).put(validate, (req,res)=>{
+    try{
+        const userId = req.params.id
+        const newProduct = req.params.body
 
-    res.json(productsArr[userId])
-    console.log(req.userId)
-}).put((req,res)=>{
-    res.send("wow! edit!")
+        productsArr[userId] = newProduct
+        res.status(200).send("Product updated!")
+    } catch {
+        res.status(500).json({error: error.message})
+    }
 }).delete((req,res)=>{
-    res.send("do you want to delete this?")
+    const userId = req.params.id
+
+    try{
+        if (userId < productsArr.length){
+            productsArr.splice(userId, 1)
+            res.status(200).send("Product successfully deleted!")
+        } else{
+            res.status(404).send("Product does not exist!")
+        }
+    } catch{
+        res.status(500).json({error: error.message})
+    }
 })
 
 
