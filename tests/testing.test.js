@@ -65,4 +65,12 @@ describe('Products API', () => {
         expect(response.body.stock).toBe(20);
     });
 
+    test('DELETE /api/products - deleting a product that doesnt exist (DAWTDS)', async () => {
+        const response = await request(app)
+            .delete('/api/products/3456723456');
+
+        expect(response.statusCode).toBe(404);
+        expect(response.body.error).toBeDefined();
+    });
+
 });
