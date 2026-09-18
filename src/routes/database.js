@@ -32,7 +32,7 @@ function retrieveProduct(req,res){
         if (err) 
             return res.status(500).json({error: err.message})
         if (!row)
-            return res.status(404).send(`Product not found on id ${id}`)
+            return res.status(404).json({error: `Product not found on id ${id}`})
         return res.status(200).json(row)
     })
 }
