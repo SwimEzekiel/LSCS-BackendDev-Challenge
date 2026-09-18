@@ -5,6 +5,7 @@ Tech Stacks Used:
     - Node.js
     - Express
     - SQLite
+    - Vitest
 */
 
 const express = require("express");
