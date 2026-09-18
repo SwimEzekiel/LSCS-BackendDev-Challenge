@@ -1,13 +1,11 @@
 //Function to validate a newly created Product object 
 //given by a JSON file
 //All essential fields must be complete and valid, 
-//else returns a status code of 400 with error messag.
+//else returns a status code of 400 with error message.
 function validateCreate(req,res,next){
     const product = req.body;
-    if (!product || !product.id || !product.productName || !product.price || !product.stock || !product.category || !product.description){
+    if (!product || !product.productName || !product.price || !product.stock || !product.category || !product.description){
         return res.status(400).json({error: "Missing required fields"})
-    } if (typeof(product.id) !== 'number'){
-        return res.status(400).json({error: "ID number must be a number"}) //might remove this with sql implementation
     } if (typeof(product.productName) !== 'string' || typeof(product.productName) == 'null'){
         return res.status(400).json({error: "Product name must be a string"})
     } if (product.price < 0 || typeof(product.price) !== 'number'){
@@ -21,6 +19,9 @@ function validateCreate(req,res,next){
     } 
     //1 more custom variable validation
     //1 more custom variable validation
+
+    //pass req.body as param
+    //use throw instead of res.status.json
     next()
 }
 
@@ -30,9 +31,7 @@ function validateCreate(req,res,next){
 function validateEdit(req,res,next){
     const editedVariables = req.body
 
-    if (typeof(editedVariables.price) !== 'number'){
-        return res.status(400).json({error: "Price must be a number"})
-    } if (typeof(editedVariables.productName) !== 'string' || typeof(product.productName) == 'null'){
+    if (typeof(editedVariables.productName) !== 'string' || typeof(editedVariables.productName) == 'null'){
         return res.status(400).json({error: "Product name must be a string"})
     } if (editedVariables.price < 0 || typeof(editedVariables.price) !== 'number'){
         return res.status(400).json({error: "Price must not be less than 0"})
@@ -43,6 +42,7 @@ function validateEdit(req,res,next){
     } if (typeof(editedVariables.description) !== 'string' || typeof(editedVariables.description) == 'null'){
         return res.status(400).json({error: "Description must be a string"})
     } 
+    next()
 }
 
-module.exports = validate;
+module.exports = {validateCreate, validateEdit};

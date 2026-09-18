@@ -1,5 +1,6 @@
 const express = require("express")
-const validate = require("./validation.js")
+const {validateCreate,validateEdit} = require("./validation.js")
+const {insertProduct, retrieveProduct, getAllProducts} = require("./database.js")
 
 //const sqlite3 = require("./src/sqlite3").verbose();
 //let sql;
@@ -23,39 +24,19 @@ const productsArr = [{
     "description": "A cute pin with cute Macky art!"
 }]
 //alfonso:ang cute ni zek zeke:thxxxx
-router.post('/products', validate, (req,res)=> {
+router.post('/products', validateCreate, insertProduct, (req,res)=> {
     try{
-        const product = req.body;
-        productsArr.push(product)
-        console.log(`product id ${product.id}, ${product.productName}`)
-        res.status(201).json(product)
+        res.send("wow u put the product!")
     } catch (error) {
         res.status(500).json({error: `${error}`})
     }
 })
 
-router.get('/products', (req,res)=>{
-    try{
-        res.write(productsArr[0])
-        res.write(productsArr[1])
-        res.sendStatus(200)
-    } catch{
-        res.status(500).json({error: error.message})
-    }
-})
+router.get('/products', getAllProducts)
 
-router.route('/products/:id').get((req, res)=>{
-    const userId = req.params.id
-    try{
-        if (userId < productsArr.length){
-            res.status(200).json(productsArr[userId])
-        } else {
-            res.status(404).send("Product not found!")
-        }
-    } catch {
-        res.status(500).json({error: error.message})
-    }
-}).put(validate, (req,res)=>{
+router.route('/products/:id')
+.get(retrieveProduct)
+.put(validateEdit, (req,res)=>{
     try{
         const userId = req.params.id
         const newProduct = req.params.body
