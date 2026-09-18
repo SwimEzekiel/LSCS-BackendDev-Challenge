@@ -5,6 +5,7 @@ Tech Stacks Used:
     - Node.js
     - Express
     - SQLite
+    - Docker (will add dockerfile later)
 */
 
 const express = require("express");

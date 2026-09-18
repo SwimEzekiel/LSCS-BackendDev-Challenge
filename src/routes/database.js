@@ -37,6 +37,50 @@ function retrieveProduct(req,res){
     })
 }
 
+function editProduct(req,res){
+    const productId = req.params.id
+    const productBody = req.body
+    const fields = ["productName", "price", "stock", "category", "description"]
+
+    let sql = `SELECT * FROM products WHERE id = ?`
+    db.get(sql, [productId], (err, row)=>{
+        if (err)
+            return res.status(500).json({error: err.message})
+        if (!row)
+            return res.status(404).json({error: `Product not found on id ${productId}`})
+
+        const updatedFields = []
+        const updatedValues = []
+        for (const field of fields){
+            if (Object.hasOwn(productBody, field)){
+                updatedFields.push(`${field} = ?`)
+                updatedValues.push(productBody[field])
+            }
+        }
+
+        if (updatedFields.length !== 0){
+            sql = `UPDATE products SET ${updatedFields.join(', ')} WHERE id = ?`
+            updatedValues.push(productId)
+
+            console.log(sql);
+            console.log(updatedValues);
+            db.run(sql, updatedValues, (err, row)=>{
+                if (err)
+                    return res.status(500).json({error: err.message})
+            })
+        }
+    })
+
+    sql = `SELECT * FROM products WHERE id = ?`
+    db.get(sql, [productId], (err, row2)=>{
+        if (err)
+            return res.status(500).json({error: err.message})
+        if (!row2)
+            return res.status(404).json({error: `Product not found on id ${productId}`})
+        return res.status(200).json(row2)
+    })
+}
+
 function getAllProducts(req,res){
     let sql = 'SELECT * FROM products'
     db.all(sql, [], (err, rows)=>{
@@ -55,37 +99,5 @@ function deleteProduct(req,res){
         return res.status(200).json({Message: "Product deleted successfully!"})
     })
 }
-// create table
-//sql = `CREATE TABLE products(id INTEGER PRIMARY KEY, productName, price, stock, category, description)`;
-//db.run(sql)
 
-//delete db
-//db.run("DROP TABLE products")
-
-//insert int table
-//sql = `INSERT INTO products(productName, price, stock, category, description) VALUES (?, ?, ?, ?, ?)`
-//db.run(sql, ["Macky T-Shirt", 750, 10, "Clothing", "A print of Macky with aesthetic shirt designs!"], (err)=>{
-//    if (err) return console.error(err.message)
-//})
-
-//update data
-// sql = `UPDATE products SET productName = ? WHERE id = ?`;
-// db.run(sql, ["Wowww PIN!!!", 2], (err)=>{
-//     if (err) return console.error(err.message)
-// })
-
-//delete data 
-// sql = `DELETE FROM products WHERE id=?`;
-// db.run(sql, [2], (err)=>{
-//     if (err) return console.error(err.message);
-// }) 
-
-//query the data
-// sql = `SELECT * FROM products`;
-// db.all(sql, [], (err, rows) =>{
-//     if (err) return console.error(err.message);
-//     rows.forEach((row) =>
-//     console.log(row))
-// })
-
-module.exports = {insertProduct, retrieveProduct, getAllProducts, deleteProduct}
+module.exports = {insertProduct, retrieveProduct, getAllProducts, editProduct, deleteProduct}
