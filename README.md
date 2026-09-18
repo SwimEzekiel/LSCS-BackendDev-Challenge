@@ -1,6 +1,6 @@
 # LSCS-BackendDev-Challenge
 
-## Proudly programmed by: Ezekiel S. Alvarez
+## Proudly programmed by: Ezekiel S. Alvarez 
 
 To compile, enter in the terminal:
 - ``npm init -y``
@@ -9,4 +9,9 @@ To compile, enter in the terminal:
 - ``npm i nodeman``
 - ``cd src``
 - ``node app.js``
+
+Tech Stacks Used:
+- Node.js
+- Express
+- SQLite3 
 
