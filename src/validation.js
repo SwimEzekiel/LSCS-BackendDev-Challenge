@@ -20,10 +20,6 @@ function validateCreate(req,res,next){
         return res.status(400).json({error: "Category must be a string"})
     if (typeof(product.description) !== 'string')
         return res.status(400).json({error: "Description must be a string"})
-
-    
-    //1 more custom variable validation
-    //1 more custom variable validation
     next()
 }
 
