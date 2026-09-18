@@ -1,6 +1,6 @@
 const express = require("express")
-const {validateCreate,validateEdit} = require("./validation.js")
-const {insertProduct, retrieveProduct, getAllProducts, editProduct, deleteProduct} = require("./database.js")
+const {validateCreate,validateEdit} = require("../validation.js")
+const {insertProduct, retrieveProduct, getAllProducts, editProduct, deleteProduct} = require("../database.js")
 
 const router = express.Router()
 
@@ -10,7 +10,7 @@ router.get('/products', getAllProducts)
 
 router.route('/products/:id')
 .get(retrieveProduct)
-.put(validateEdit, editProduct) //remove validate for now
+.put(validateEdit, editProduct)
 .delete(deleteProduct)
 
 module.exports = router

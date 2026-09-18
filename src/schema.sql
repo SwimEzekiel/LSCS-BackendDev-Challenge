@@ -1,0 +1,10 @@
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    productName TEXT NOT NULL,
+    price INTEGER NOT NULL,
+    stock INTEGER NOT NULL,
+    size TEXT NOT NULL,
+    weight REAL NOT NULL,
+    category TEXT NOT NULL,
+    description TEXT NOT NULL
+);

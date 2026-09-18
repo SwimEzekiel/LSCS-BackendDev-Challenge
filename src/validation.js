@@ -12,10 +12,15 @@ function validateCreate(req,res,next){
         return res.status(400).json({error: "Price must not be less than 0 or must not be null"})
     if (product.stock < 0 || typeof(product.stock) !== 'number')
         return res.status(400).json({error: "Stock must not be less than 0 or must not be null"})
+    if(typeof(product.size) !== 'string')
+        return res.status(400).json({error: "Size must be a string"})
+    if(product.weight < 0 || typeof(product.weight) !== 'number')
+        return res.status(400).json({error: "Weight must be a positive number"})
     if (typeof(product.category) !== 'string')
         return res.status(400).json({error: "Category must be a string"})
     if (typeof(product.description) !== 'string')
         return res.status(400).json({error: "Description must be a string"})
+
     
     //1 more custom variable validation
     //1 more custom variable validation
@@ -27,7 +32,7 @@ function validateCreate(req,res,next){
 //Does not require all valid parameters in the JSON file
 function validateEdit(req,res,next){
     const editedVariables = req.body
-    const fields = ["productName", "price", "stock", "category", "description"]
+    const fields = ["productName", "price", "stock", "size", "weight", "category", "description"]
     let editedCount = 0
 
     for (const field of fields){
@@ -43,6 +48,10 @@ function validateEdit(req,res,next){
                 return res.status(400).json({error: "Price must be a positive number"})
             if (field === "stock" && (typeof(editedVariables.stock) !== 'number' || editedVariables.stock < 0))
                 return res.status(400).json({error: "Stock must be a positive number"})
+            if(field === "size" && typeof(product.size) !== 'string')
+                return res.status(400).json({error: "Size must be a string"})
+            if(field === "weight" && (product.weight < 0 || typeof(product.weight) !== 'number'))
+                return res.status(400).json({error: "Weight must be a positive number"})
         }
     }
 

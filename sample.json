@@ -1,8 +1,9 @@
 {
-    "id": 1,
     "productName": "Pin",
     "price": 50,
     "stock": 3,
+    "size": "Medium",
+    "weight": "0.82",
     "category": "Accessories",
     "description": "A cute pin with cute Macky art!"
 }

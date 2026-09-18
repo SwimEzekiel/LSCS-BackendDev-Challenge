@@ -1,29 +1,39 @@
 const sqlite3 = require("sqlite3").verbose();
 
-const db = new sqlite3.Database("./schema.db", sqlite3.OPEN_READWRITE, (err)=>{
+const db = new sqlite3.Database("./products.db", sqlite3.OPEN_READWRITE, (err)=>{
     if (err) return console.error(err.message)
 })
 
-//function productExists(productId) - will implement later to declutter code
 
+db.run(`CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY AUTOINCREMENT,
+        productName TEXT NOT NULL,
+        price INTEGER NOT NULL,
+        stock INTEGER NOT NULL,
+        size TEXT NOT NULL,
+        weight REAL NOT NULL,
+        category TEXT NOT NULL,
+        description TEXT NOT NULL)`);
+
+//Inserts a product object into the products database. 
 function insertProduct(req,res){
     const product = req.body;
 
-    let sql = `INSERT INTO products(productName, price, stock, category, description) VALUES (?, ?, ?, ?, ?)`;
-    db.run(sql, [product.productName, product.price, product.stock, product.category, product.description], function(err){
+    let sql = `INSERT INTO products(productName, price, stock, size, weight, category, description) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [product.productName, product.price, product.stock, product.size, product.weight, product.category, product.description], function(err){
         if (err) 
-            return res.status(500).json({error: error.message})
+            return res.status(500).json({error: err.message})
 
         const productId = this.lastID
         sql = `SELECT * FROM products WHERE id = ?`
         db.get(sql, [productId], (err, row)=>{
             if (err) 
-                return res.status(500).json({error: error.message})
-            return res.status(200).json(row)
+                return res.status(500).json({error: err.message})
+            return res.status(201).json(row)
         })
     })
 }
 
+//grabs a product in the database given an id then returns it
 function retrieveProduct(req,res){
     const id = req.params.id
     
@@ -37,10 +47,11 @@ function retrieveProduct(req,res){
     })
 }
 
+//edits a product given its id and the parameters given to be edited. returns edited item
 function editProduct(req,res){
     const productId = req.params.id
     const productBody = req.body
-    const fields = ["productName", "price", "stock", "category", "description"]
+    const fields = ["productName", "price", "stock", "size", "weight", "category", "description"]
 
     let sql = `SELECT * FROM products WHERE id = ?`
     db.get(sql, [productId], (err, row)=>{
@@ -62,25 +73,21 @@ function editProduct(req,res){
             sql = `UPDATE products SET ${updatedFields.join(', ')} WHERE id = ?`
             updatedValues.push(productId)
 
-            console.log(sql);
-            console.log(updatedValues);
-            db.run(sql, updatedValues, (err, row)=>{
+            db.run(sql, updatedValues, (err)=>{
                 if (err)
                     return res.status(500).json({error: err.message})
+
+                db.get(`SELECT * FROM products WHERE id = ?`, [productId], (err, row2) => {
+                    if (err)
+                        return res.status(500).json({error: err.message})
+                    return res.status(200).json(row2)
+                })
             })
         }
     })
-
-    sql = `SELECT * FROM products WHERE id = ?`
-    db.get(sql, [productId], (err, row2)=>{
-        if (err)
-            return res.status(500).json({error: err.message})
-        if (!row2)
-            return res.status(404).json({error: `Product not found on id ${productId}`})
-        return res.status(200).json(row2)
-    })
 }
 
+//returns a list of all the products available
 function getAllProducts(req,res){
     let sql = 'SELECT * FROM products'
     db.all(sql, [], (err, rows)=>{
@@ -90,6 +97,7 @@ function getAllProducts(req,res){
     })
 }
 
+//deletes a product given its id 
 function deleteProduct(req,res){
     const productId = req.params.id
     let sql = `DELETE FROM products WHERE id = ?`;
