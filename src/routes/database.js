@@ -4,16 +4,24 @@ const db = new sqlite3.Database("./schema.db", sqlite3.OPEN_READWRITE, (err)=>{
     if (err) return console.error(err.message)
 })
 
+//function productExists(productId) - will implement later to declutter code
 
-function insertProduct(req,res,next){
+function insertProduct(req,res){
     const product = req.body;
 
     let sql = `INSERT INTO products(productName, price, stock, category, description) VALUES (?, ?, ?, ?, ?)`;
-    db.run(sql, [product.productName, product.price, product.stock, product.category, product.description], (err)=>{
-        if (err) return res.status(500).json({error: error.message})
-    })
+    db.run(sql, [product.productName, product.price, product.stock, product.category, product.description], function(err){
+        if (err) 
+            return res.status(500).json({error: error.message})
 
-    next()
+        const productId = this.lastID
+        sql = `SELECT * FROM products WHERE id = ?`
+        db.get(sql, [productId], (err, row)=>{
+            if (err) 
+                return res.status(500).json({error: error.message})
+            return res.status(200).json(row)
+        })
+    })
 }
 
 function retrieveProduct(req,res){
@@ -35,6 +43,16 @@ function getAllProducts(req,res){
         if (err) 
             return res.status(500).json({error: err.message})
         return res.status(200).json(rows)
+    })
+}
+
+function deleteProduct(req,res){
+    const productId = req.params.id
+    let sql = `DELETE FROM products WHERE id = ?`;
+    db.run(sql, (productId), function(err){
+        if (this.changes === 0)
+            return res.status(404).json({error: `Product doesn't exist in id ${productId}`})
+        return res.status(200).json({Message: "Product deleted successfully!"})
     })
 }
 // create table
@@ -63,11 +81,11 @@ function getAllProducts(req,res){
 // }) 
 
 //query the data
-sql = `SELECT * FROM products`;
-db.all(sql, [], (err, rows) =>{
-    if (err) return console.error(err.message);
-    rows.forEach((row) =>
-    console.log(row))
-})
+// sql = `SELECT * FROM products`;
+// db.all(sql, [], (err, rows) =>{
+//     if (err) return console.error(err.message);
+//     rows.forEach((row) =>
+//     console.log(row))
+// })
 
-module.exports = {insertProduct, retrieveProduct, getAllProducts}
+module.exports = {insertProduct, retrieveProduct, getAllProducts, deleteProduct}
