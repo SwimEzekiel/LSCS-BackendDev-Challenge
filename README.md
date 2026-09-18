@@ -26,7 +26,7 @@ Tech Stacks Used:
 Architecture Decision:
 - ``tests/testing.test.js`` - the file for testing the program itself
 - ``src/routes/api.js`` - organized routing
-- ``src/routes/necessary-files - easy access 
+- ``src/routes/necessary-files`` - easy access 
 
 Why these tech stacks?:
 - Node.js && Express - Required for the project

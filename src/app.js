@@ -6,6 +6,7 @@ Tech Stacks Used:
     - Express
     - SQLite
     - Vitest
+    - Supertest
 */
 
 const express = require("express");
